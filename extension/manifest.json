@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube to Brave Redirector",
+  "version": "1.0.0",
+  "description": "Redirects YouTube links to Brave browser.",
+  "permissions": ["activeTab", "scripting", "webNavigation", "nativeMessaging"],
+  "host_permissions": ["*://*.youtube.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*", "*://*.youtu.be/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_icon": "icon.png",
+    "default_title": "Open in Brave"
+  },
+  "author": "Jason4193",
+  "homepage_url": "https://github.com/jason4193/youtube-to-brave",
+  "icons": {
+    "128": "icon.png"
+  }
+}
