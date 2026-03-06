@@ -104,7 +104,16 @@ def main():
             log("Failed to write response to stdout:", error)
 
         try:
-            subprocess.run(["open", "-a", "Brave Browser", url], check=True)
+            if sys.platform == "win32":
+                # On Windows, 'start brave' works if Brave is in the PATH or registered as a protocol handler
+                # Using shell=True for 'start' command
+                subprocess.run("start brave " + url, shell=True, check=True)
+            elif sys.platform == "darwin":
+                # macOS
+                subprocess.run(["open", "-a", "Brave Browser", url], check=True)
+            else:
+                # Linux fallback
+                subprocess.run(["brave-browser", url], check=True)
             log("Opened in Brave:", url)
         except Exception as error:
             log("Failed to open Brave:", error, url)

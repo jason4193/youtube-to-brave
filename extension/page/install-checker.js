@@ -8,6 +8,11 @@ const MAC_NATIVE_SCRIPT_PATH = "native-host/script.py";
 const MAC_GUIDE_PAGE = "page/mac-install-guide.html";
 const MAC_UNINSTALL_GUIDE_PAGE = "page/mac-uninstall-guide.html";
 
+const WIN_INSTALLER_PATH = "native-host/install-windows.bat";
+const WIN_NATIVE_SCRIPT_PATH = "native-host/script.py";
+const WIN_GUIDE_PAGE = "page/windows-install-guide.html";
+const WIN_UNINSTALL_GUIDE_PAGE = "page/windows-uninstall-guide.html";
+
 // ── DOM refs ──────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
 const body = document.body;
@@ -24,8 +29,6 @@ const btnDiag = $("btnDiag");
 const diagOutput = $("diagOutput");
 const btnSettings = $("btnSettings");
 const settingsMenu = $("settingsMenu");
-const btnOpenInstallGuide = $("btnOpenInstallGuide");
-const btnOpenUninstallGuide = $("btnOpenUninstallGuide");
 
 let currentPlatform = "Unknown";
 
@@ -162,21 +165,17 @@ async function downloadMacBundle() {
   await downloadResource(MAC_NATIVE_SCRIPT_PATH, "YouTubeToBrave/script.py");
 }
 
-function openMacGuidePage() {
-  const url = chrome.runtime.getURL(
-    `${MAC_GUIDE_PAGE}?extId=${encodeURIComponent(chrome.runtime.id)}`,
+async function downloadWinBundle() {
+  await downloadResource(
+    WIN_INSTALLER_PATH,
+    "YouTubeToBrave/install-windows.bat",
   );
-
-  if (chrome.tabs && chrome.tabs.create) {
-    chrome.tabs.create({ url });
-    return;
-  }
-
-  window.open(url, "_blank");
+  await downloadResource(WIN_NATIVE_SCRIPT_PATH, "YouTubeToBrave/script.py");
 }
 
-function openMacUninstallGuidePage() {
-  const url = chrome.runtime.getURL(MAC_UNINSTALL_GUIDE_PAGE);
+function openGuidePage(baseUrl, includeExtId = false) {
+  const urlParams = includeExtId ? `?extId=${encodeURIComponent(chrome.runtime.id)}` : "";
+  const url = chrome.runtime.getURL(`${baseUrl}${urlParams}`);
 
   if (chrome.tabs && chrome.tabs.create) {
     chrome.tabs.create({ url });
@@ -233,20 +232,23 @@ async function init() {
   currentPlatform = platform;
   showPlatformIcon(platform);
   platformName.textContent = platform;
-  const supported = ["macOS"].includes(platform); // Only macOS supported in Phase 1
+  const supported = ["macOS", "Windows"].includes(platform);
   if (supported) {
     platformBadge.style.display = "";
     platformBadge.textContent = "Supported";
     platformBadge.className = "badge badge-green";
     btnDownload.disabled = false;
-    btnDownload.title = "Download the native host installer for your platform";
+    btnDownload.title = `Download the native host installer for ${platform}`;
+    if (btnDownloadText.textContent === "macOS only (coming soon)") {
+      btnDownloadText.textContent = "Download Installer";
+    }
   } else {
     platformBadge.style.display = "";
     platformBadge.textContent = "Coming Soon";
     platformBadge.className = "badge badge-gray";
     btnDownload.disabled = true;
-    btnDownload.title = "Installer is currently available for macOS only";
-    btnDownloadText.textContent = "macOS only (coming soon)";
+    btnDownload.title = "Installer is not available for your platform";
+    btnDownloadText.textContent = "macOS/Windows only";
   }
 
   // 2. Extension version
@@ -285,7 +287,30 @@ async function init() {
 
   // 4. Settings menu
   if (settingsMenu) {
-    settingsMenu.classList.remove("visible");
+    settingsMenu.innerHTML = ""; // clear any existing items
+    const addMenuItem = (text, onClick) => {
+      const btn = document.createElement("button");
+      btn.className = "settings-item";
+      btn.textContent = text;
+      btn.addEventListener("click", () => {
+        onClick();
+        settingsMenu.classList.remove("visible");
+      });
+      settingsMenu.appendChild(btn);
+    };
+
+    if (platform === "macOS") {
+      addMenuItem("Open macOS install guide", () => openGuidePage(MAC_GUIDE_PAGE, true));
+      addMenuItem("Open macOS uninstall guide", () => openGuidePage(MAC_UNINSTALL_GUIDE_PAGE));
+    } else if (platform === "Windows") {
+      addMenuItem("Open Windows install guide", () => openGuidePage(WIN_GUIDE_PAGE, true));
+      addMenuItem("Open Windows uninstall guide", () => openGuidePage(WIN_UNINSTALL_GUIDE_PAGE));
+    } else {
+      addMenuItem("Open macOS install guide", () => openGuidePage(MAC_GUIDE_PAGE, true));
+      addMenuItem("Open macOS uninstall guide", () => openGuidePage(MAC_UNINSTALL_GUIDE_PAGE));
+      addMenuItem("Open Windows install guide", () => openGuidePage(WIN_GUIDE_PAGE, true));
+      addMenuItem("Open Windows uninstall guide", () => openGuidePage(WIN_UNINSTALL_GUIDE_PAGE));
+    }
   }
 }
 
@@ -308,32 +333,24 @@ if (btnSettings && settingsMenu) {
   });
 }
 
-if (btnOpenInstallGuide) {
-  btnOpenInstallGuide.addEventListener("click", () => {
-    openMacGuidePage();
-    if (settingsMenu) settingsMenu.classList.remove("visible");
-  });
-}
-
-if (btnOpenUninstallGuide) {
-  btnOpenUninstallGuide.addEventListener("click", () => {
-    openMacUninstallGuidePage();
-    if (settingsMenu) settingsMenu.classList.remove("visible");
-  });
-}
-
 btnDownload.addEventListener("click", () => {
-  if (currentPlatform !== "macOS") {
-    btnDownloadText.textContent = "macOS only (coming soon)";
+  if (!["macOS", "Windows"].includes(currentPlatform)) {
+    btnDownloadText.textContent = "macOS/Windows only";
     return;
   }
 
   (async () => {
     try {
-      setDownloadButtonLoading(true, "Downloading macOS installer files...");
-      await downloadMacBundle();
-      setDownloadButtonLoading(false, "Downloaded — Opening setup guide...");
-      openMacGuidePage();
+      setDownloadButtonLoading(true, `Downloading ${currentPlatform} installer...`);
+      if (currentPlatform === "macOS") {
+        await downloadMacBundle();
+        setDownloadButtonLoading(false, "Downloaded — Opening setup guide...");
+        openGuidePage(MAC_GUIDE_PAGE, true);
+      } else if (currentPlatform === "Windows") {
+        await downloadWinBundle();
+        setDownloadButtonLoading(false, "Downloaded — Opening setup guide...");
+        openGuidePage(WIN_GUIDE_PAGE, true);
+      }
       setTimeout(() => {
         btnDownloadText.textContent = "Download Installer";
       }, 2500);
