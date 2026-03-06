@@ -6,11 +6,11 @@ A Chrome extension + native host that redirects YouTube URLs from Chrome to Brav
 
 ## Current Status
 
-- ✅ macOS install flow implemented (guided)
+- ✅ macOS & Windows install flow implemented (guided)
 - ✅ Native host version check integrated in popup
-- ✅ Installer download from popup (downloads `install-macos.command` + `script.py`)
-- ✅ Guide pages for mac install/uninstall
-- 🚧 Windows/Linux installer flow not implemented yet (UI shows Coming Soon)
+- ✅ Installer download from popup (downloads script plus `.command` for Mac or `.bat` for Windows)
+- ✅ Guide pages for Mac and Windows install/uninstall
+- 🚧 Linux installer flow not implemented yet (UI shows Coming Soon)
 
 ## Project Structure
 
@@ -37,10 +37,15 @@ youtube-to-brave/
 │   │   ├── mac-install-guide.css
 │   │   ├── mac-install-guide.js
 │   │   ├── mac-uninstall-guide.html
-│   │   └── mac-uninstall-guide.js
+│   │   ├── mac-uninstall-guide.js
+│   │   ├── windows-install-guide.html
+│   │   ├── windows-install-guide.js
+│   │   ├── windows-uninstall-guide.html
+│   │   └── windows-uninstall-guide.js
 │   └── native-host/
 │       ├── script.py
-│       └── install-macos.command
+│       ├── install-macos.command
+│       └── install-windows.bat
 ├── native-host/
 │   ├── script.py
 │   └── setup.sh
@@ -53,17 +58,17 @@ youtube-to-brave/
 - Chrome Browser (v90+)
 - Brave Browser
 - Python 3.7+
-- macOS (current supported installer platform)
+- macOS or Windows (currently supported platforms)
 
-## Quick Start (Recommended mac flow)
+## Quick Start (Recommended Flow)
 
 1. Open `chrome://extensions`
 2. Enable **Developer mode**
 3. Click **Load unpacked** and select `extension/`
 4. Click the extension icon to open popup
-5. Click **Download Installer**
-6. The popup downloads installer files and opens mac install guide
-7. Run commands from guide page in Terminal
+5. Click **Download Installer** (automatically detects OS)
+6. The popup downloads installer files and opens the corresponding install guide
+7. Run the installer (`install-macos.command` on Mac or `install-windows.bat` on Windows)
 8. Reload extension in `chrome://extensions`
 9. Re-open popup and verify status is **Active**
 
@@ -76,17 +81,24 @@ cd native-host
 ./setup.sh EXTENSION_ID
 ```
 
-## Uninstall / Reset (macOS)
+## Uninstall / Reset
 
-You can open uninstall instructions from popup:
+You can open uninstall instructions from the popup:
 
-- Popup → gear icon (top-right) → **Open mac uninstall guide**
+- Popup → gear icon (top-right) → **Open [macOS/Windows] uninstall guide**
 
 Or run manually:
 
+**macOS:**
 ```bash
 rm -f "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.example.youtubetobrave.json"
 rm -rf "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/youtube-to-brave"
+```
+
+**Windows (PowerShell):**
+```powershell
+Remove-ItemProperty -Path "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.example.youtubetobrave" -Name "(Default)" -ErrorAction SilentlyContinue
+Remove-Item -Path "$env:LOCALAPPDATA\YouTubeToBrave" -Recurse -Force -ErrorAction SilentlyContinue
 ```
 
 ## Troubleshooting
