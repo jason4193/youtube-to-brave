@@ -1,12 +1,15 @@
 # YouTube to Brave Redirector
 
-This extension redirects YouTube links to the Brave browser via a native messaging host.
+![YouTube to Brave Redirector](extension/icon.png)
+For those who prefer to watch YouTube videos in the Brave browser, but still stuck with Chrome for other browsing. Here's a simple Chrome extension solution that detects YouTube links and opens them in Brave instead.
+
+This project consists of a Chrome extension that listens for navigations to YouTube URLs and a native host program that opens those URLs in Brave. The extension communicates with the native host using Chrome's Native Messaging API, which all programs are running locally with no external servers involved.
 
 ## Project Structure
 
 ```
 youtube-to-brave/
-├── extension/              # Chrome/Brave web extension files
+├── extension/              # Chrome web extension files
 │   ├── manifest.json
 │   ├── background.js
 │   ├── content.js
@@ -26,6 +29,7 @@ youtube-to-brave/
 ## Requirements
 
 - **Chrome Browser** (version 90+)
+- **Brave Browser** (latest version)
 - **Python 3** (3.7 or higher)
   - On macOS with Homebrew: `/opt/homebrew/bin/python3` or `/usr/local/bin/python3`
   - On Linux: `python3` from your package manager
