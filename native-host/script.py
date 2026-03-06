@@ -6,6 +6,8 @@ import json
 import subprocess
 from pathlib import Path
 
+VERSION = "1.0.0"
+
 LOG = Path.home() / "youtube_redirect_debug.log"
 
 # Debug enabled when environment variable YTB_DEBUG=1 or
@@ -66,6 +68,19 @@ def main():
 		if msg is None:
 			break
 		log("Input received:", msg)
+		# Handle version check from extension
+		if msg.get("action") == "version":
+			log("Version check requested")
+			try:
+				resp = json.dumps({"status": "ok", "version": VERSION}).encode("utf-8")
+				sys.stdout.buffer.write(struct.pack("<I", len(resp)))
+				sys.stdout.buffer.write(resp)
+				sys.stdout.buffer.flush()
+				log("Sent version response:", VERSION)
+			except Exception as e:
+				log("Failed to write version response:", e)
+			continue
+
 		url = msg.get("url")
 		if not url:
 			log("No URL field in message")

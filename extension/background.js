@@ -1,5 +1,31 @@
 console.log("Background script loaded");
 
+// ── Startup: check native host and set badge ─────────────
+(async function checkInstallStatus() {
+  try {
+    chrome.runtime.sendNativeMessage(
+      "com.example.youtubetobrave",
+      { action: "version" },
+      (response) => {
+        if (chrome.runtime.lastError || !response) {
+          // Native host not reachable — show warning badge
+          chrome.action.setBadgeText({ text: "!" });
+          chrome.action.setBadgeBackgroundColor({ color: "#d93025" });
+          console.warn("Native host not detected:", chrome.runtime.lastError?.message);
+        } else {
+          // Connected — clear badge
+          chrome.action.setBadgeText({ text: "" });
+          console.log("Native host connected, version:", response.version);
+        }
+      }
+    );
+  } catch (e) {
+    chrome.action.setBadgeText({ text: "!" });
+    chrome.action.setBadgeBackgroundColor({ color: "#d93025" });
+    console.warn("Native host check failed:", e);
+  }
+})();
+
 // Listen for top-level navigations to YouTube and redirect to Brave
 chrome.webNavigation.onBeforeNavigate.addListener(function (details) {
   console.log("Navigating to:", details.url);

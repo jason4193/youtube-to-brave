@@ -1,130 +1,112 @@
 # YouTube to Brave Redirector
 
-![YouTube to Brave Redirector](extension/icon.png)
-For those who prefer to watch YouTube videos in the Brave browser, but still stuck with Chrome for other browsing. Here's a simple Chrome extension solution that detects YouTube links and opens them in Brave instead.
+![YouTube to Brave Redirector](extension/assets/icon.png)
 
-This project consists of a Chrome extension that listens for navigations to YouTube URLs and a native host program that opens those URLs in Brave. The extension communicates with the native host using Chrome's Native Messaging API, which all programs are running locally with no external servers involved.
+A Chrome extension + native host that redirects YouTube URLs from Chrome to Brave.
+
+## Current Status
+
+- ✅ macOS install flow implemented (guided)
+- ✅ Native host version check integrated in popup
+- ✅ Installer download from popup (downloads `install-macos.command` + `script.py`)
+- ✅ Guide pages for mac install/uninstall
+- 🚧 Windows/Linux installer flow not implemented yet (UI shows Coming Soon)
 
 ## Project Structure
 
-```
+```text
 youtube-to-brave/
-├── extension/              # Chrome web extension files
+├── extension/
 │   ├── manifest.json
 │   ├── background.js
 │   ├── content.js
-│   └── icon.png
-├── native-host/            # Native host program (local machine)
+│   ├── assets/
+│   │   ├── icon.png
+│   │   ├── chrome-light.svg
+│   │   ├── chrome-dark.svg
+│   │   ├── brave-light.svg
+│   │   ├── brave-dark.svg
+│   │   ├── apple.svg
+│   │   ├── windows.svg
+│   │   └── linux.svg
+│   ├── page/
+│   │   ├── install.html
+│   │   ├── install.css
+│   │   ├── install-checker.js
+│   │   ├── mac-install-guide.html
+│   │   ├── mac-install-guide.css
+│   │   ├── mac-install-guide.js
+│   │   ├── mac-uninstall-guide.html
+│   │   └── mac-uninstall-guide.js
+│   └── native-host/
+│       ├── script.py
+│       └── install-macos.command
+├── native-host/
 │   ├── script.py
 │   └── setup.sh
-├── README.md
-└── __pycache__/
+├── PROJECT_SSOT.md
+└── README.md
 ```
-
-## Quick Overview
-
-- The extension detects navigations to YouTube and calls a native host `com.example.youtubetobrave`.
-- The native host opens the URL in Brave and replies to the extension with a small acknowledgement.
 
 ## Requirements
 
-- **Chrome Browser** (version 90+)
-- **Brave Browser** (latest version)
-- **Python 3** (3.7 or higher)
-  - On macOS with Homebrew: `/opt/homebrew/bin/python3` or `/usr/local/bin/python3`
-  - On Linux: `python3` from your package manager
-- **macOS or Linux** (Windows not currently supported)
-- No additional Python packages required (uses only standard library)
+- Chrome Browser (v90+)
+- Brave Browser
+- Python 3.7+
+- macOS (current supported installer platform)
 
-## Setup Instructions
+## Quick Start (Recommended mac flow)
 
-### 1. Load Extension
+1. Open `chrome://extensions`
+2. Enable **Developer mode**
+3. Click **Load unpacked** and select `extension/`
+4. Click the extension icon to open popup
+5. Click **Download Installer**
+6. The popup downloads installer files and opens mac install guide
+7. Run commands from guide page in Terminal
+8. Reload extension in `chrome://extensions`
+9. Re-open popup and verify status is **Active**
 
-1. Open Chrome and navigate to `chrome://extensions`
-2. Enable **Developer mode** (toggle in top-right corner)
-3. Click **Load unpacked**
-4. Navigate to the `extension/` folder in this project and select it
-5. The extension will load and display in the list with your extension ID
-6. Note your extension ID for use in the next step
+## Alternative Manual Install (legacy dev script)
 
-### 2. Install Native Host
-
-1. Ensure `python3` is installed and accessible. On macOS with Homebrew this is typically `/opt/homebrew/bin/python3`.
-
-2. Make sure `script.py` is executable:
-
-```bash
-chmod +x native-host/script.py
-```
-
-3. Run the setup script from the `native-host/` directory to write the native messaging manifest. Replace `EXTENSION_ID` with your extension ID (from chrome://extensions):
+If you want to bypass the popup flow:
 
 ```bash
 cd native-host
 ./setup.sh EXTENSION_ID
 ```
 
-Example:
+## Uninstall / Reset (macOS)
+
+You can open uninstall instructions from popup:
+
+- Popup → gear icon (top-right) → **Open mac uninstall guide**
+
+Or run manually:
 
 ```bash
-./setup.sh inojbnigjmpkgmkcfhiahghpjgjngnkp
-```
-
-The native host manifest will be installed to:
-
-- `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.example.youtubetobrave.json`
-
-## Testing
-
-1. Open Chrome DevTools:
-   - Right-click the extension icon and select **Inspect**
-   - Or: Go to `chrome://extensions` → Click the extension → Inspect views → **Service worker**
-
-2. In the DevTools console, you should see logs from the background script
-
-3. Navigate to or click a YouTube link (e.g., `https://youtube.com/watch?v=...` or `https://youtu.be/...`)
-
-4. The extension will:
-   - Detect the YouTube URL
-   - Send it to the native host
-   - Open it in Brave
-   - Remove the tab from Chrome
-
-5. Check debug logs (optional):
-
-```bash
-tail -f ~/youtube_redirect_debug.log
-```
-
-## Security & Cleanup
-
-- When testing is finished, remove the debug log to avoid leaking URLs or other data:
-
-```bash
-rm -f ~/youtube_redirect_debug.log
+rm -f "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.example.youtubetobrave.json"
+rm -rf "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/youtube-to-brave"
 ```
 
 ## Troubleshooting
 
-- If Chrome reports "Native host has exited." and the native host log does not show entries:
-  - Verify the manifest `allowed_origins` exactly matches your extension ID (including trailing slash)
-  - Check the manifest is installed at `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/`
-  - Verify the `path` in the manifest points to the correct `script.py` location
-  - Ensure `script.py` shebang points to an accessible Python interpreter
+- If popup shows not installed:
+  - Reload extension in `chrome://extensions`
+  - Run **Connection Diagnostics** in popup
+  - Verify manifest exists:
 
-## Files Overview
+```bash
+ls -la "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
+```
 
-### Extension Files (`extension/`)
+- If Python path issue appears, ensure `python3` is available on PATH.
 
-- `manifest.json` — extension manifest with permissions and metadata
-- `background.js` — service worker that listens for YouTube navigations
-- `content.js` — content script that runs on YouTube pages
-- `icon.png` — extension icon (128x128)
+## Security Notes
 
-### Native Host Files (`native-host/`)
-
-- `script.py` — native host program that opens Brave and validates URLs
-- `setup.sh` — helper script to install the native messaging host manifest
+- Native host only accepts `http://` and `https://` URLs.
+- Native host communication restricted by `allowed_origins` to your extension ID.
+- No external services; all processing is local.
 
 ## License
 
