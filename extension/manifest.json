@@ -9,13 +9,21 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_icon": "assets/icon.png",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    },
     "default_title": "YouTube to Brave",
     "default_popup": "page/install.html"
   },
   "author": "Jason4193",
   "homepage_url": "https://github.com/jason4193/youtube-to-brave",
   "icons": {
-    "128": "assets/icon.png"
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   }
 }
