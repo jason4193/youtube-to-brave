@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy - YouTube to Brave Redirector</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --line: #374151;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #111827;
+        --muted: #4b5563;
+        --accent: #15803d;
+        --line: #e5e7eb;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    h1,
+    h2 {
+      margin: 0 0 12px;
+      line-height: 1.25;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    h2 {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    p,
+    li {
+      color: var(--text);
+      margin: 0 0 10px;
+    }
+
+    ul {
+      margin: 8px 0 12px 18px;
+      padding: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .ok {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    code {
+      background: rgba(127, 127, 127, 0.14);
+      padding: 0 5px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    a {
+      color: inherit;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Privacy Policy — YouTube to Brave Redirector</h1>
+      <p class="muted">Last updated: March 7, 2026</p>
+
+      <h2>Summary</h2>
+      <p>This extension is designed to run locally on your device.</p>
+      <ul>
+        <li>It detects YouTube navigation in Chrome and sends only the URL needed to open Brave.</li>
+        <li>The native host script receives that URL via Chrome Native Messaging and opens Brave locally.</li>
+        <li>No analytics, cloud sync, account login, or external API calls are used.</li>
+      </ul>
+
+      <h2>Data processed by the extension</h2>
+      <ul>
+        <li>YouTube URLs from <code>youtube.com</code> and <code>youtu.be</code> navigations.</li>
+        <li>Platform type (macOS/Windows/Linux) for install guide UX.</li>
+        <li>Extension and native host versions for compatibility checks.</li>
+      </ul>
+      <p>Installer files are downloaded only when you click the install button in the popup UI.</p>
+
+      <h2>Data processed by the native host</h2>
+      <ul>
+        <li>URL messages sent from the extension (expected <code>http</code> / <code>https</code> only).</li>
+        <li>Version-check messages.</li>
+      </ul>
+
+      <h2>Storage and retention</h2>
+      <p class="ok">Default mode: no persistent logging of browsing data.</p>
+      <ul>
+        <li>Extension: no telemetry/history database is maintained.</li>
+        <li>Native host: no log file is written unless debug mode is explicitly enabled.</li>
+      </ul>
+
+      <h2>Debug mode (off by default)</h2>
+      <p>If debug mode is manually enabled (<code>YTB_DEBUG=1</code> or debug marker file), diagnostic logs are written locally to <code>~/youtube_redirect_debug.log</code>.</p>
+      <p>These logs are stored only on your device and can be deleted any time.</p>
+
+      <h2>What we do not do</h2>
+      <ul>
+        <li>Do not transmit URLs to external servers.</li>
+        <li>Do not sell or share personal data with third parties.</li>
+        <li>Do not execute remote code.</li>
+      </ul>
+
+      <h2>Support</h2>
+      <p>Project homepage: <a href="https://github.com/jason4193/youtube-to-brave" target="_blank" rel="noopener noreferrer">github.com/jason4193/youtube-to-brave</a></p>
+    </section>
+  </main>
+</body>
+
+</html>

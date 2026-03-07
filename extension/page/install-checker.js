@@ -5,13 +5,13 @@
 const NATIVE_HOST = "com.example.youtubetobrave";
 const MAC_INSTALLER_PATH = "native-host/install-macos.command";
 const MAC_NATIVE_SCRIPT_PATH = "native-host/script.py";
-const MAC_GUIDE_PAGE = "page/mac-install-guide.html";
-const MAC_UNINSTALL_GUIDE_PAGE = "page/mac-uninstall-guide.html";
-
 const WIN_INSTALLER_PATH = "native-host/install-windows.bat";
 const WIN_NATIVE_SCRIPT_PATH = "native-host/script.py";
-const WIN_GUIDE_PAGE = "page/windows-install-guide.html";
-const WIN_UNINSTALL_GUIDE_PAGE = "page/windows-uninstall-guide.html";
+
+// Unified guide pages (platform specified via ?platform= query parameter)
+const INSTALL_GUIDE_PAGE = "page/install-guide.html";
+const UNINSTALL_GUIDE_PAGE = "page/uninstall-guide.html";
+const PRIVACY_POLICY_PAGE = "page/privacy-policy.html";
 
 // ── DOM refs ──────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
@@ -173,8 +173,18 @@ async function downloadWinBundle() {
   await downloadResource(WIN_NATIVE_SCRIPT_PATH, "YouTubeToBrave/script.py");
 }
 
-function openGuidePage(baseUrl, includeExtId = false) {
-  const urlParams = includeExtId ? `?extId=${encodeURIComponent(chrome.runtime.id)}` : "";
+function openGuidePage(baseUrl, options = {}) {
+  const params = new URLSearchParams();
+  
+  if (options.includeExtId) {
+    params.append("extId", chrome.runtime.id);
+  }
+  
+  if (options.platform) {
+    params.append("platform", options.platform);
+  }
+  
+  const urlParams = params.toString() ? `?${params.toString()}` : "";
   const url = chrome.runtime.getURL(`${baseUrl}${urlParams}`);
 
   if (chrome.tabs && chrome.tabs.create) {
@@ -300,16 +310,41 @@ async function init() {
     };
 
     if (platform === "macOS") {
-      addMenuItem("Open macOS install guide", () => openGuidePage(MAC_GUIDE_PAGE, true));
-      addMenuItem("Open macOS uninstall guide", () => openGuidePage(MAC_UNINSTALL_GUIDE_PAGE));
+      addMenuItem("Open macOS install guide", () => 
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "macos" })
+      );
+      addMenuItem("Open macOS uninstall guide", () => 
+        openGuidePage(UNINSTALL_GUIDE_PAGE, { platform: "macos" })
+      );
+      addMenuItem("Open privacy policy", () => 
+        openGuidePage(PRIVACY_POLICY_PAGE)
+      );
     } else if (platform === "Windows") {
-      addMenuItem("Open Windows install guide", () => openGuidePage(WIN_GUIDE_PAGE, true));
-      addMenuItem("Open Windows uninstall guide", () => openGuidePage(WIN_UNINSTALL_GUIDE_PAGE));
+      addMenuItem("Open Windows install guide", () => 
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "windows" })
+      );
+      addMenuItem("Open Windows uninstall guide", () => 
+        openGuidePage(UNINSTALL_GUIDE_PAGE, { platform: "windows" })
+      );
+      addMenuItem("Open privacy policy", () => 
+        openGuidePage(PRIVACY_POLICY_PAGE)
+      );
     } else {
-      addMenuItem("Open macOS install guide", () => openGuidePage(MAC_GUIDE_PAGE, true));
-      addMenuItem("Open macOS uninstall guide", () => openGuidePage(MAC_UNINSTALL_GUIDE_PAGE));
-      addMenuItem("Open Windows install guide", () => openGuidePage(WIN_GUIDE_PAGE, true));
-      addMenuItem("Open Windows uninstall guide", () => openGuidePage(WIN_UNINSTALL_GUIDE_PAGE));
+      addMenuItem("Open macOS install guide", () => 
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "macos" })
+      );
+      addMenuItem("Open macOS uninstall guide", () => 
+        openGuidePage(UNINSTALL_GUIDE_PAGE, { platform: "macos" })
+      );
+      addMenuItem("Open Windows install guide", () => 
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "windows" })
+      );
+      addMenuItem("Open Windows uninstall guide", () => 
+        openGuidePage(UNINSTALL_GUIDE_PAGE, { platform: "windows" })
+      );
+      addMenuItem("Open privacy policy", () => 
+        openGuidePage(PRIVACY_POLICY_PAGE)
+      );
     }
   }
 }
@@ -345,11 +380,11 @@ btnDownload.addEventListener("click", () => {
       if (currentPlatform === "macOS") {
         await downloadMacBundle();
         setDownloadButtonLoading(false, "Downloaded — Opening setup guide...");
-        openGuidePage(MAC_GUIDE_PAGE, true);
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "macos" });
       } else if (currentPlatform === "Windows") {
         await downloadWinBundle();
         setDownloadButtonLoading(false, "Downloaded — Opening setup guide...");
-        openGuidePage(WIN_GUIDE_PAGE, true);
+        openGuidePage(INSTALL_GUIDE_PAGE, { includeExtId: true, platform: "windows" });
       }
       setTimeout(() => {
         btnDownloadText.textContent = "Download Installer";

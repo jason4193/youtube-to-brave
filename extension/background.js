@@ -37,7 +37,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(function (details) {
   try {
     const urlObj = new URL(details.url);
     const host = urlObj.hostname || "";
-    const isYouTubeHost = host.includes("youtube.com") || host === "youtu.be";
+    const isYouTubeHost = host === "youtu.be" || host.endsWith(".youtube.com") || host === "youtube.com";
 
     if (isYouTubeHost && details.tabId && details.tabId !== -1) {
       const tabId = details.tabId;
@@ -50,6 +50,10 @@ chrome.webNavigation.onBeforeNavigate.addListener(function (details) {
       // Send to native host first, then remove the tab once we have a response
       sendViaNativePort({ url: braveUrl }, function (ok) {
         // ok === true when we received a positive response, false otherwise
+        if (!ok) {
+          console.warn("Native host did not confirm handoff; keeping tab open:", tabId);
+          return;
+        }
         try {
           chrome.tabs.remove(tabId, function () {
             console.log("Removed tab after native host response:", tabId);

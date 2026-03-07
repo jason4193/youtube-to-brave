@@ -33,15 +33,12 @@ youtube-to-brave/
 │   │   ├── install.html
 │   │   ├── install.css
 │   │   ├── install-checker.js
-│   │   ├── mac-install-guide.html
-│   │   ├── mac-install-guide.css
-│   │   ├── mac-install-guide.js
-│   │   ├── mac-uninstall-guide.html
-│   │   ├── mac-uninstall-guide.js
-│   │   ├── windows-install-guide.html
-│   │   ├── windows-install-guide.js
-│   │   ├── windows-uninstall-guide.html
-│   │   └── windows-uninstall-guide.js
+│   │   ├── install-guide.html          # Unified install guide (all platforms)
+│   │   ├── install-guide.js            # Platform-specific install logic
+│   │   ├── uninstall-guide.html        # Unified uninstall guide (all platforms)
+│   │   ├── uninstall-guide.js          # Platform-specific uninstall logic
+│   │   ├── guide-common.css            # Shared styles for all guides
+│   │   └── privacy-policy.html         # Privacy policy page
 │   └── native-host/
 │       ├── script.py
 │       ├── install-macos.command
@@ -87,15 +84,19 @@ You can open uninstall instructions from the popup:
 
 - Popup → gear icon (top-right) → **Open [macOS/Windows] uninstall guide**
 
+The unified guide system automatically detects your platform and shows appropriate instructions.
+
 Or run manually:
 
 **macOS:**
+
 ```bash
 rm -f "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.example.youtubetobrave.json"
 rm -rf "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/youtube-to-brave"
 ```
 
 **Windows (PowerShell):**
+
 ```powershell
 Remove-ItemProperty -Path "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.example.youtubetobrave" -Name "(Default)" -ErrorAction SilentlyContinue
 Remove-Item -Path "$env:LOCALAPPDATA\YouTubeToBrave" -Recurse -Force -ErrorAction SilentlyContinue
@@ -119,6 +120,12 @@ ls -la "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
 - Native host only accepts `http://` and `https://` URLs.
 - Native host communication restricted by `allowed_origins` to your extension ID.
 - No external services; all processing is local.
+- Data is not persistently logged by default; debug logging is optional and off by default.
+
+## Privacy Policy
+
+- Repository policy: `PRIVACY_POLICY.md`
+- In-extension policy page: `extension/page/privacy-policy.html`
 
 ## License
 

@@ -1,26 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "YouTube to Brave Redirector",
+  "name": "YouTube to Brave Redirector BETA",
   "version": "1.0.0",
-  "description": "Redirects YouTube links to Brave browser.",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "webNavigation",
-    "nativeMessaging",
-    "storage",
-    "downloads"
-  ],
-  "host_permissions": ["*://*.youtube.com/*"],
+  "description": "THIS EXTENSION IS FOR BETA TESTING, Redirects YouTube links to Brave browser.",
+  "permissions": ["tabs", "webNavigation", "nativeMessaging", "downloads"],
+  "host_permissions": ["*://*.youtube.com/*", "*://*.youtu.be/*"],
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["*://*.youtube.com/*", "*://*.youtu.be/*"],
-      "js": ["content.js"]
-    }
-  ],
   "action": {
     "default_icon": "assets/icon.png",
     "default_title": "YouTube to Brave",

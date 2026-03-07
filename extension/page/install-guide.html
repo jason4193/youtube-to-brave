@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>macOS Install Guide</title>
-    <link rel="stylesheet" href="mac-install-guide.css" />
+    <title>Install Guide</title>
+    <link rel="stylesheet" href="guide-common.css" />
   </head>
   <body>
     <main class="container">
-      <h1>Install Native Host (macOS)</h1>
-      <p class="sub">
-        Files were downloaded to <strong>~/Downloads/YouTubeToBrave</strong>.
-        Run these commands in Terminal.
-      </p>
+      <h1 id="pageTitle">Install Native Host</h1>
+      <p class="sub" id="pageSubtitle">Follow the instructions to complete installation.</p>
 
       <section class="card">
         <h2>1) Confirm Extension ID</h2>
@@ -22,18 +19,16 @@
         </p>
       </section>
 
-      <section class="card">
-        <h2>2) Run Installation Commands</h2>
-        <pre id="cmdBlock" class="cmd"></pre>
-        <button id="copyBtn" class="btn">Copy Commands</button>
+      <section class="card" id="installInstructions">
+        <h2>2) Run Installation</h2>
+        <div id="instructionContent"></div>
       </section>
 
       <section class="card">
         <h2>3) Verify in Chrome</h2>
         <ol>
           <li>
-            Open <span class="inline-code">chrome://extensions</span> and reload
-            this extension.
+            Open <span class="inline-code">chrome://extensions</span> and reload this extension.
           </li>
           <li>Open the extension popup.</li>
           <li>Status should change to <strong>Active</strong>.</li>
@@ -42,6 +37,6 @@
       </section>
     </main>
 
-    <script src="mac-install-guide.js"></script>
+    <script src="install-guide.js"></script>
   </body>
 </html>

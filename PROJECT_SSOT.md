@@ -91,16 +91,20 @@ youtube-to-brave/
 │   │   ├── chrome-light.svg             # Chrome icon for light mode
 │   │   ├── chrome-dark.svg              # Chrome icon for dark mode
 │   │   ├── brave-light.svg              # Brave icon for light mode
-│   │   └── brave-dark.svg               # Brave icon for dark mode
+│   │   ├── brave-dark.svg               # Brave icon for dark mode
+│   │   ├── apple.svg                    # Apple/macOS icon
+│   │   ├── windows.svg                  # Windows icon
+│   │   └── linux.svg                    # Linux icon
 │   ├── page/                            # NEW FOLDER: UI pages
 │   │   ├── install.html                 # Installation status UI
 │   │   ├── install.css                  # Styles for install page
 │   │   ├── install-checker.js           # Detection & download logic
-│   │   ├── mac-install-guide.html       # Guided install steps (macOS)
-│   │   ├── mac-install-guide.css        # Guide page styles
-│   │   ├── mac-install-guide.js         # Install command generation
-│   │   ├── mac-uninstall-guide.html     # Guided uninstall steps (macOS)
-│   │   └── mac-uninstall-guide.js       # Uninstall command generation
+│   │   ├── install-guide.html           # Unified install guide (all platforms)
+│   │   ├── install-guide.js             # Platform-specific install logic
+│   │   ├── uninstall-guide.html         # Unified uninstall guide (all platforms)
+│   │   ├── uninstall-guide.js           # Platform-specific uninstall logic
+│   │   ├── guide-common.css             # Shared styles for all guides
+│   │   └── privacy-policy.html          # Privacy policy page
 │   └── native-host/                     # NEW FOLDER: Bundled native host
 │       ├── script.py                    # MOVED: From native-host/
 │       ├── install-macos.command        # NEW: macOS installer
@@ -213,11 +217,13 @@ youtube-to-brave/
 - ✨ `extension/page/install.html` - UI
 - ✨ `extension/page/install.css` - styles
 - ✨ `extension/page/install-checker.js` - detection logic
-- ✨ `extension/page/mac-install-guide.html` - guided install page
-- ✨ `extension/page/mac-install-guide.js` - install command generation
-- ✨ `extension/page/mac-uninstall-guide.html` - guided uninstall page
-- ✨ `extension/page/mac-uninstall-guide.js` - uninstall command generation
-- ✨ `extension/assets/` - browser icons
+- ✨ `extension/page/install-guide.html` - unified install guide (all platforms)
+- ✨ `extension/page/install-guide.js` - platform-specific install logic
+- ✨ `extension/page/uninstall-guide.html` - unified uninstall guide (all platforms)
+- ✨ `extension/page/uninstall-guide.js` - platform-specific uninstall logic
+- ✨ `extension/page/guide-common.css` - shared styles for guides
+- ✨ `extension/page/privacy-policy.html` - privacy policy page
+- ✨ `extension/assets/` - browser and OS icons
 - ✨ `extension/native-host/script.py` - copy bundled version
 - ✨ `extension/native-host/install-macos.command`
 - ✨ `extension/native-host/install-windows.bat`
@@ -225,14 +231,16 @@ youtube-to-brave/
 
 **Success Criteria:**
 
-- [ ] Extension detects native host status on startup
-- [ ] Install page shows support state (macOS supported; Windows/Linux coming soon)
-- [ ] Download button triggers correct installer download
-- [ ] Download flow opens guided mac install page with CLI instructions
-- [ ] Double-click installer completes installation
-- [ ] Extension detects successful installation and shows ✅ status
-- [ ] YouTube redirection works with new installer setup
-- [ ] All platforms tested (macOS, Windows, Linux)
+- [x] Extension detects native host status on startup
+- [x] Install page shows support state (macOS and Windows supported; Linux coming soon)
+- [x] Download button triggers correct installer download
+- [x] Download flow opens unified install guide with platform-specific instructions
+- [x] Unified guide pages reduce code duplication
+- [x] Platform detection via URL parameter (?platform=macos|windows|linux)
+- [x] Double-click installer completes installation (macOS/Windows)
+- [x] Extension detects successful installation and shows ✅ status
+- [x] YouTube redirection works with new installer setup
+- [ ] All platforms fully tested and documented
 
 ### Phase 2: Windows Support (POST Phase 1)
 

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uninstall Guide</title>
+    <link rel="stylesheet" href="guide-common.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1 id="pageTitle">Uninstall Native Host</h1>
+      <p class="sub" id="pageSubtitle">
+        Follow these instructions to remove the native host.
+      </p>
+
+      <section class="card">
+        <h2 id="uninstallTitle">Run Uninstall</h2>
+        <div id="uninstallContent"></div>
+      </section>
+
+      <section class="card" id="detailsSection" style="display: none;">
+        <h2>What this does</h2>
+        <ul id="detailsList"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Verify in Chrome</h2>
+        <ol>
+          <li>
+            Open <span class="inline-code">chrome://extensions</span> and reload this extension.
+          </li>
+          <li>Open the extension popup.</li>
+          <li>Status should show <strong>Not Installed</strong>.</li>
+          <li>
+            Use <strong>Connection Diagnostics</strong> to confirm the manifest path is missing.
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <script src="uninstall-guide.js"></script>
+  </body>
+</html>
