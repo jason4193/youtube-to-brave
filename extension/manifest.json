@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "YouTube to Brave Redirector BETA",
   "version": "1.0.0",
-  "description": "THIS EXTENSION IS FOR BETA TESTING, Redirects YouTube links to Brave browser.",
+  "description": "THIS EXTENSION IS FOR BETA TESTING. Automatically opens YouTube links in Brave browser while keeping Chrome for other websites.",
   "permissions": ["tabs", "webNavigation", "nativeMessaging", "downloads"],
   "host_permissions": ["*://*.youtube.com/*", "*://*.youtu.be/*"],
   "background": {
